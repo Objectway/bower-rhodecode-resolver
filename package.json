@@ -1,0 +1,20 @@
+{
+  "name": "bower-rhodecode-resolver",
+  "version": "0.0.1",
+  "description": "A Bower resolver to allow integration with a RhodeCode repository",
+  "keywords": [
+    "bower-resolver",
+    "bower-rhodecode-resolver",
+    "bower rhodecode"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "bower-registry-client": "^1.0.0",
+    "q": "^1.4.1",
+    "request": "^2.69.0",
+    "spawn-command": "0.0.2-1",
+    "tmp": "0.0.28"
+  },
+  "license": "MIT"
+}
