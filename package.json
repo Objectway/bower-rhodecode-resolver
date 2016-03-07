@@ -16,5 +16,6 @@
     "spawn-command": "0.0.2-1",
     "tmp": "0.0.28"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/Objectway/bower-rhodecode-resolver.git"
 }
