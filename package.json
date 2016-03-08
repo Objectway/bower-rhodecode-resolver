@@ -11,7 +11,9 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "bower-registry-client": "^1.0.0",
+    "file-type": "^3.8.0",
     "q": "^1.4.1",
+    "read-chunk": "^1.0.1",
     "request": "^2.69.0",
     "spawn-command": "0.0.2-1",
     "tmp": "0.0.28"

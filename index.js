@@ -1,10 +1,13 @@
 var tmp = require('tmp'),
     request = require('request'),
     fs = require('fs'),
+    path = require('path'),
     Q = require('q'),
     RegistryClient = require('bower-registry-client'),
     AdmZip = require('adm-zip'),
-    spawnCommand = require('spawn-command');
+    spawnCommand = require('spawn-command'),
+    readChunk = require('read-chunk'), // npm install read-chunk
+    FileType = require('file-type');
 
 
 /**
@@ -85,29 +88,46 @@ module.exports = function resolver(bower) {
                 tmpDir = tmp.dirSync().name,
                 target = endpoint.target == '*' ? 'tip' : endpoint.target,
                 url = endpoint.source + '/archive/' + target + '.zip?auth_token=' + bower.config.rhodecode.token,
-                zipFile = tmpDir + '/' + endpoint.name + '.zip';
+                filePath = tmpDir + '/' + endpoint.name;
 
             bower.logger.debug('rhodecode: repo url', url);
 
             request.get(url)
-                .pipe(fs.createWriteStream(zipFile))
+                .pipe(fs.createWriteStream(filePath))
                 .on('close', function () {
 
                     try {
-                        var zip = new AdmZip(zipFile);
+                        var buffer = readChunk.sync(filePath, 0, 262),
+                            fileType = FileType(buffer),
+                            fileExt = (fileType ? fileType.ext : 'txt'),
+                            newFilePath = filePath + '.' + fileExt;
 
-                        zip.getEntries().forEach(function (zipEntry) {
-                            zip.extractEntryTo(zipEntry.entryName, tmpDir, false, true);
-                        });
+                        fs.renameSync(filePath, newFilePath);
 
-                        fs.unlink(zipFile, function () {
+                        if(fileExt === 'zip') {
 
-                            deferred.resolve({
-                                tempPath: tmpDir,
-                                removeIgnores: true
+                            var zip = new AdmZip(newFilePath),
+                                extractedDir;
+
+                            zip.getEntries().forEach(function(zipEntry) {
+                                zip.extractEntryTo(zipEntry.entryName, tmpDir, true, true);
+
+                                if(typeof extractedDir == 'undefined'){
+                                    extractedDir = tmpDir + path.sep + zipEntry.entryName.replace(/(^[^\\\/]+).*/, '$1')
+                                }
+
                             });
 
-                        });
+                            fs.unlink(newFilePath, function () {
+                                deferred.resolve({
+                                    tempPath: extractedDir,
+                                    removeIgnores: true
+                                });
+
+                            });
+                        } else {
+                            throw new Error("Invalid file, check on this link: " + url);
+                        }
                     } catch (err) {
                         deferred.reject(err);
                     }
