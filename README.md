@@ -2,10 +2,7 @@
 A Bower resolver to allow integration with a RhodeCode repository
 
 ## Installation
-In your project
-`npm install bower-rhodecode-resolver`
 
-or globally
 `npm install -g bower-rhodecode-resolver`
 
 In order to use Bower with Rhodecode you need 2 components (npm packages):
@@ -18,6 +15,9 @@ Edit your ~/.bowerrc and add:
 
 ```json
 ...
+  "resolvers": [
+    "bower-rhodecode-resolver"
+  ],
   "rhodecode": {
   	"token": "1234567890asdfghjklzxcvbnm",
   	"repo": "www.your-rhodecode-repo.com"
@@ -27,18 +27,6 @@ Edit your ~/.bowerrc and add:
 
 ### Where can I find the auth token?
 As explained in the [rhodecode documentation](https://docs.rhodecode.com/RhodeCode-Enterprise/auth/token-auth.html#creating-tokens), each user can find his own token on the rhodecode repository web site under: Username -> My Account -> Auth tokens
-
-
-## Project configuration
-
-Edit the .bowerrc in your project or the global one and add:
-```json
-...
-  "resolvers": [
-    "bower-rhodecode-resolver"
-  ]
-...
-```
 
 ## Rhodecode Configuration (v3)
 
