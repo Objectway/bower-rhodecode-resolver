@@ -1,6 +1,9 @@
 # bower-rhodecode-resolver
 A Bower resolver to allow integration with a RhodeCode repository
 
+[![npm version badge](https://img.shields.io/npm/v/bower-rhodecode-resolver.svg)](https://www.npmjs.org/package/bower-rhodecode-resolver)
+[![downloads badge](http://img.shields.io/npm/dm/bower-rhodecode-resolver.svg)](https://www.npmjs.org/package/bower-rhodecode-resolver)
+
 ## Installation
 
 `npm install -g bower-rhodecode-resolver`
