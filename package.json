@@ -1,6 +1,6 @@
 {
   "name": "bower-rhodecode-resolver",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Bower resolver to allow integration with a RhodeCode repository",
   "keywords": [
     "bower-resolver",
