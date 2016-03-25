@@ -64,9 +64,7 @@ module.exports = function resolver(bower) {
             });
 
             command.stdout.on('finish', function () {
-                var tags = lsRemoteOutput.replace(/^.+tags\/([^\s\^]+\n).*$/gm, "$1").trim().split("\n").filter(function (tag) {
-                    return !!tag;
-                }).map(function (tag) {
+                var tags = lsRemoteOutput.replace(/^.+tags\/([^\s\^]+)$/gm, "$1").trim().split("\n").map(function (tag) {
                     return {target: tag, version: tag.replace(/[^0-9\.]/gm, '')}
                 });
 
