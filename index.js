@@ -55,24 +55,29 @@ module.exports = function resolver(bower) {
 
         releases: function (source) {
             var deferred = Q.defer(),
-                command = spawnCommand("git ls-remote --tags " + source),
-                lsRemoteOutput = '';
+                gitLsRemote = spawnCommand("git ls-remote --tags " + source),
+                gitLsRemoteOutput = source + ' ';
 
 
-            command.stdout.on('data', function (data) {
-                lsRemoteOutput += data.toString('utf8');
+            gitLsRemote.stdout.on('data', function (data) {
+                gitLsRemoteOutput += data.toString('utf8');
             });
 
-            command.stdout.on('finish', function () {
-                var tags = lsRemoteOutput.match(/(^.+tags\/[^\s\^]+$)/gm).map(function (tag) {
-                    var _tag = tag.replace(/^.+tags\/([^\s\^]+)$/gm, '$1');
-                    return {target: _tag, version: _tag.replace(/[^0-9\.]/gm, '')}
-                });
+            gitLsRemote.stdout.on('finish', function () {
+                // console.log('gitLsRemoteOutput', gitLsRemoteOutput);
+                try {
+                    var tags = gitLsRemoteOutput.match(/(^.+tags\/[^\s\^]+$)/gm).map(function (tag) {
+                        var _tag = tag.replace(/^.+tags\/([^\s\^]+)$/gm, '$1');
+                        return {target: _tag, version: _tag.replace(/^v/gm, '')}
+                    });
+                    deferred.resolve(tags)
+                } catch (error) {
+                    deferred.reject(error);
+                }
 
-                deferred.resolve(tags)
             });
 
-            command.stdout.on('error', function (error) {
+            gitLsRemote.stdout.on('error', function (error) {
                 deferred.reject(error);
             });
 
@@ -89,6 +94,7 @@ module.exports = function resolver(bower) {
                 url = endpoint.source + '/archive/' + target + '.zip?auth_token=' + bower.config.rhodecode.token,
                 filePath = tmpDir + '/' + endpoint.name;
 
+            // console.log('endpoint', endpoint);
             bower.logger.debug('rhodecode: repo url', url);
 
             request.get(url)
@@ -103,15 +109,15 @@ module.exports = function resolver(bower) {
 
                         fs.renameSync(filePath, newFilePath);
 
-                        if(fileExt === 'zip') {
+                        if (fileExt === 'zip') {
 
                             var zip = new AdmZip(newFilePath),
                                 extractedDir;
 
-                            zip.getEntries().forEach(function(zipEntry) {
+                            zip.getEntries().forEach(function (zipEntry) {
                                 zip.extractEntryTo(zipEntry.entryName, tmpDir, true, true);
 
-                                if(typeof extractedDir == 'undefined'){
+                                if (typeof extractedDir == 'undefined') {
                                     extractedDir = tmpDir + path.sep + zipEntry.entryName.replace(/(^[^\\\/]+).*/, '$1')
                                 }
 
