@@ -66,8 +66,8 @@ module.exports = function resolver(bower) {
             gitLsRemote.stdout.on('finish', function () {
                 // console.log('gitLsRemoteOutput', gitLsRemoteOutput);
                 try {
-                    var tags = gitLsRemoteOutput.match(/(^.+tags\/[^\s\^]+$)/gm).map(function (tag) {
-                        var _tag = tag.replace(/^.+tags\/([^\s\^]+)$/gm, '$1');
+                    var tags = gitLsRemoteOutput.match(/(^.+tags[\/\\][^\s\^]+$)/gm).map(function (tag) {
+                        var _tag = tag.replace(/^.+tags[\/\\]([^\s\^]+)$/gm, '$1');
                         return {target: _tag, version: _tag.replace(/^v/gm, '')}
                     });
                     deferred.resolve(tags)
