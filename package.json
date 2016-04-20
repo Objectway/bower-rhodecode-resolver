@@ -8,7 +8,8 @@
   "keywords": [
     "bower-resolver",
     "bower-rhodecode-resolver",
-    "bower rhodecode"
+    "bower rhodecode",
+    "rhodecode"
   ],
   "main": "index.js",
   "dependencies": {
