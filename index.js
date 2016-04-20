@@ -72,6 +72,7 @@ module.exports = function resolver(bower) {
                     });
                     deferred.resolve(tags)
                 } catch (error) {
+                    console.error('git ls-remote --tags', gitLsRemoteOutput);
                     deferred.reject(error);
                 }
 
