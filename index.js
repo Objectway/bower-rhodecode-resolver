@@ -22,7 +22,7 @@ module.exports = function resolver(bower) {
     bower.logger.debug('bower config', bower.config);
     if (!bower.config.hasOwnProperty('rhodecode') || !bower.config.rhodecode.hasOwnProperty('repo') || !bower.config.rhodecode.hasOwnProperty('token')) {
         bower.logger.error("bower-rhodecode-resolver", "Invalid settings in your .bowerrc file, check you have this properties: \n\"rhodecode\": {\n\t\"repo\": \"www.myrepo.com\",\n\t\"token\": \"asdfghjkl1234567890\"\n}");
-        throw new Error("Resolver invalid settings");
+        process.exit();
     }
 
     // Resolver factory returns an instance of resolver
@@ -64,7 +64,6 @@ module.exports = function resolver(bower) {
             });
 
             gitLsRemote.stdout.on('finish', function () {
-                // console.log('gitLsRemoteOutput', gitLsRemoteOutput);
                 try {
                     var tags = gitLsRemoteOutput.match(/(^.+tags[\/\\][^\s\^]+$)/gm).map(function (tag) {
                         var _tag = tag.replace(/^.+tags[\/\\]([^\s\^]+)$/gm, '$1');
@@ -72,7 +71,7 @@ module.exports = function resolver(bower) {
                     });
                     deferred.resolve(tags)
                 } catch (error) {
-                    console.error('git ls-remote --tags', gitLsRemoteOutput);
+                    bower.logger.debug('git ls-remote --tags', gitLsRemoteOutput);
                     deferred.reject(error);
                 }
 
@@ -95,7 +94,6 @@ module.exports = function resolver(bower) {
                 url = endpoint.source + '/archive/' + target + '.zip?auth_token=' + bower.config.rhodecode.token,
                 filePath = tmpDir + '/' + endpoint.name;
 
-            // console.log('endpoint', endpoint);
             bower.logger.debug('rhodecode: repo url', url);
 
             request.get(url)
@@ -132,7 +130,7 @@ module.exports = function resolver(bower) {
 
                             });
                         } else {
-                            throw new Error("Invalid file, check on this link: " + url);
+                            deferred.reject("Invalid file, check on this link", url);
                         }
                     } catch (err) {
                         deferred.reject(err);
