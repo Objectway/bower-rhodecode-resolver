@@ -64,12 +64,18 @@ module.exports = function resolver(bower) {
             });
 
             gitLsRemote.stdout.on('finish', function () {
+                //bower.logger.debug('RHODECODE RESOLVER: Invoking finish callback...');
                 try {
-                    var tags = gitLsRemoteOutput.match(/(^.+tags[\/\\][^\s\^]+$)/gm).map(function (tag) {
-                        var _tag = tag.replace(/^.+tags[\/\\]([^\s\^]+)$/gm, '$1');
-                        return {target: _tag, version: _tag.replace(/^v/gm, '')}
-                    });
-                    deferred.resolve(tags)
+                    var tags = gitLsRemoteOutput.match(/(^.+tags[\/\\][^\s\^]+$)/gm);
+                    if(tags === null) {
+                      tags = [];
+                    } else {
+                      tags = tags.map(function(tag) {
+                          var _tag = tag.replace(/^.+tags[\/\\]([^\s\^]+)$/gm, '$1');
+                          return {target: _tag, version: _tag.replace(/^v/gm, '')}
+                      });
+                    }
+                    deferred.resolve(tags);
                 } catch (error) {
                     bower.logger.debug('git ls-remote --tags', gitLsRemoteOutput);
                     deferred.reject(error);
