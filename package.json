@@ -13,7 +13,7 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "adm-zip": "^0.4.7",
+    "adm-zip": "0.4.9",
     "bower-registry-client": "^1.0.0",
     "file-type": "^3.8.0",
     "q": "^1.4.1",
