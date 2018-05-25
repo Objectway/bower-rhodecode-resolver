@@ -1,6 +1,6 @@
 {
   "name": "bower-rhodecode-resolver",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "A Bower resolver to allow integration with a RhodeCode repository",
   "publishConfig": {
     "registry": "http://registry.npmjs.org"
@@ -13,7 +13,7 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "adm-zip": "0.4.9",
+    "adm-zip": "0.4.7",
     "bower-registry-client": "^1.0.0",
     "file-type": "^3.8.0",
     "q": "^1.4.1",
